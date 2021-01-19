@@ -1,0 +1,23 @@
+#!/bin/bash
+cd `dirname $0`
+
+if [ "${VUE_APP_AMITABHA}" == "" ] ; then
+    exit 0
+fi
+
+echo VUE_APP_AMITABHA: ${VUE_APP_AMITABHA}
+echo SOURCE_VERSION: ${SOURCE_VERSION}
+
+if [ "${VUE_APP_AMITABHA}" == "AMITABHA (staging)" ] ; then
+    echo "build for Staging"
+    sed -i 's/Sandbox/Staging/' ../pages/version.php
+else
+    echo "build for Production"
+    sed -i 's/Sandbox/Production/' ../pages/version.php
+fi
+
+sed -i "s/unknown/$SOURCE_VERSION/" ../pages/version.php
+
+sed -i "s/Epnm6TgPniBOshr6vgRJIFmBFMRyMEWiUdymo2TS/$VUE_APP_PARSE_APP_ID/" ../pages/member/js/parse.js
+sed -i "s/9NDN1RClNLlvel1jXUH4VXTpnknCxRthYNyWQqCU/$VUE_APP_PARSE_JS_KEY/" ../pages/member/js/parse.js
+
