@@ -1,0 +1,4 @@
+*.pem
+certs/
+vendor/
+live_data/
