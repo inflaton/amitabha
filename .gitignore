@@ -1,4 +1,3 @@
 *.pem
-certs/
-vendor/
+.vscode/
 live_data/

@@ -1,0 +1,7 @@
+#!/bin/bash
+cd `dirname $0`
+cd ../apps/web
+pwd
+yarn cache clean && yarn run build
+rm -rf ../../pages/online
+mv dist ../../pages/online

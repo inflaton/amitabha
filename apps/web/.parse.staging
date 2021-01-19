@@ -1,0 +1,10 @@
+{
+  "applications": {
+    "_default": {
+      "link": "amitabha-staging"
+    },
+    "amitabha-staging": {
+      "applicationId": "d5cGjIzjxBmhDfKknJSrr5utsqtjr1PUUL9oOvQO"
+    }
+  }
+}
