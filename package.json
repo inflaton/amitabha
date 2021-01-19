@@ -3,7 +3,7 @@
   "name": "amituofo",
   "private": true,
   "scripts": {
-    "build": "(cd apps/web && yarn cache clean && yarn build && rm -rf ../../pages/online && mv dist ../../pages/online); (cd tools && ./build-heroku)",
+    "build": "(cd apps/web && npm run-script build && rm -rf ../../pages/online && mv dist ../../pages/online); (cd tools && ./build-heroku)",
     "start": "node apps/web/server.js"
   },
   "version": "0.1.0"
