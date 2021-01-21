@@ -44,7 +44,7 @@ function loadNavigationMenu(el) {
 					html = html.replaceAll('href=".', 'href="../.')
 				}
 			}
-			// console.log(`html: ${html}`);
+			// console.log(`html: ${html}`);c
 			el.outerHTML = html;
 		}
 
@@ -62,6 +62,9 @@ function loadNavigationMenu(el) {
 
 		if (element) {
 			element.addEventListener('click', () => {
+				console.log(
+					`logoutButton2 clicked - loggedInUser: ${JSON.stringify(Parse.User.current())}`
+				);
 				Parse.User.logOut().catch(() => { }).then(() => {
 					window.location.href = '/index.html';
 					return false;
@@ -85,9 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	const loggedInUser = Parse.User.current();
-	// console.log(
-	// 	`loggedInUser: ${JSON.stringify(loggedInUser)}`
-	// );
+	console.log(
+		`loggedInUser: ${JSON.stringify(loggedInUser)}`
+	);
 
 	element = document.getElementById(loggedInUser ? 'member' : 'non-member');
 
@@ -99,6 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	if (element) {
 		element.addEventListener('click', () => {
+			console.log(
+				`logoutButton clicked - loggedInUser: ${JSON.stringify(Parse.User.current())}`
+			);
 			Parse.User.logOut().catch(() => { }).then(() => {
 				window.location.href = '/index.html';
 				return false;
