@@ -2,11 +2,17 @@
 cd `dirname $0`
 
 if [ "${VUE_APP_AMITABHA}" == "" ] ; then
+    cp ../apps/web/.parse.js.local ../pages/online/js/parse.js
     exit 0
 fi
 
 echo VUE_APP_AMITABHA: ${VUE_APP_AMITABHA}
 echo SOURCE_VERSION: ${SOURCE_VERSION}
+
+sed -i "s/VUE_APP_PARSE_APP_ID/$VUE_APP_PARSE_APP_ID/" ../pages/online/js/parse.js
+sed -i "s/VUE_APP_PARSE_JS_KEY/$VUE_APP_PARSE_JS_KEY/" ../pages/online/js/parse.js
+
+exit 0
 
 if [ "${VUE_APP_AMITABHA}" == "AMITABHA (staging)" ] ; then
     echo "build for Staging"
@@ -17,7 +23,3 @@ else
 fi
 
 sed -i "s/unknown/$SOURCE_VERSION/" ../pages/version.php
-
-sed -i "s/Epnm6TgPniBOshr6vgRJIFmBFMRyMEWiUdymo2TS/$VUE_APP_PARSE_APP_ID/" ../pages/member/js/parse.js
-sed -i "s/9NDN1RClNLlvel1jXUH4VXTpnknCxRthYNyWQqCU/$VUE_APP_PARSE_JS_KEY/" ../pages/member/js/parse.js
-

@@ -88,9 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	const loggedInUser = Parse.User.current();
-	console.log(
-		`loggedInUser: ${JSON.stringify(loggedInUser)}`
-	);
+	// console.log(
+	// 	`loggedInUser: ${JSON.stringify(loggedInUser)}`
+	// );
 
 	element = document.getElementById(loggedInUser ? 'member' : 'non-member');
 

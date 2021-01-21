@@ -1,9 +1,9 @@
 {
-  "author": "Donghao Huang <donghao.huang@gmail.com>",
-  "name": "amituofo",
+  "author": "Inflaton",
+  "name": "amitabha",
   "private": true,
   "scripts": {
-    "build": "(rm -rf pages/online && cd apps/web && npm install && npm run build && mv dist ../../pages/online); (cd tools && ./build-heroku)",
+    "build": "rm -rf pages/online && cd apps/web && npm install && npm run build && mv dist ../../pages/online && ../../tools/post-build",
     "start": "node apps/web/server.js"
   },
   "version": "0.1.0"
