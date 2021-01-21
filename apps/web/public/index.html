@@ -47,30 +47,7 @@
     <div class="sideImg LazyLoad" data-original="<%= VUE_APP_PARENT_URL %>/shared/images/2020012112431079-300x300.jpg">
     </div>
     <nav role="navigation">
-      <div id="mdx_menu" class="mdui-list">
-        <ul style="font-size: 20px; ">
-          <a href="<%= VUE_APP_PARENT_URL %>/">
-            <%= VUE_APP_AMITABHA %>首页
-          </a>
-        </ul>
-        <ul style="font-size: 20px; line-height: 1.8; PADDING-LEFT: 80px">
-          <li><a href="<%= VUE_APP_PARENT_URL %>/jtjl/">淨土經論</a></li>
-          <li><a href="<%= VUE_APP_PARENT_URL %>/ygwc/">印光大师文钞</a></li>
-          <li><a href="<%= VUE_APP_PARENT_URL %>/dzfs/">道證法師專輯</a></li>
-          <li><a href="<%= VUE_APP_PARENT_URL %>/mclhs/">梦参老和尚</a></li>
-          <li><a href="<%= VUE_APP_PARENT_URL %>/sdjkb/">索达吉堪布</a></li>
-          <li><a href="<%= VUE_APP_PARENT_URL %>/cysc/">常用颂词</a></li>
-          <li><a href="<%= VUE_APP_PARENT_URL %>/cyyg/">常用仪轨</a></li>
-          <div id="non-member-func" style="display: none;">
-            <li><a href="<%= VUE_APP_PARENT_URL %>/online/#/login">用户登录</a></li>
-            <li><a href="<%= VUE_APP_PARENT_URL %>/online/#/register">新用户注册</a></li>
-          </div>
-          <div id="member-func" style="display: none;">
-            <li><a href="<%= VUE_APP_PARENT_URL %>/online/#">学修平台</a></li>
-            <li><a id="logoutButton" href="">退出登录</a></li>
-          </div>
-        </ul>
-      </div>
+      <div id="navigationMenu" data-include="<%= VUE_APP_PARENT_URL %>/menu.html"></div>
     </nav>
   </div>
   <header role="banner">
@@ -164,6 +141,7 @@
   </script>
   <script src='<%= VUE_APP_PARENT_URL %>/shared/themes/mdx/js/post.js'></script>
   <script src="<%= VUE_APP_PARENT_URL %>/member/js/home.js"></script>
+  <script src="<%= VUE_APP_PARENT_URL %>/shared/js/csi.js"></script>
   <style>
     .aligncenter {
       text-align: center;
