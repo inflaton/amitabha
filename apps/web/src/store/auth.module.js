@@ -54,17 +54,17 @@ const getters = {
 };
 
 var updateMenu = function() {
-  const loggedInUser = Parse.User.current();
-
   const memberFunc = document.getElementById("member-func");
   const nonMemberFunc = document.getElementById("non-member-func");
 
-  if (loggedInUser) {
-    memberFunc.setAttribute("style", "display: block;");
-    nonMemberFunc.setAttribute("style", "display: none;");
-  } else {
-    nonMemberFunc.setAttribute("style", "display: block;");
-    memberFunc.setAttribute("style", "display: none;");
+  if (memberFunc && nonMemberFunc) {
+    if (Parse.User.current()) {
+      memberFunc.setAttribute("style", "display: block;");
+      nonMemberFunc.setAttribute("style", "display: none;");
+    } else {
+      nonMemberFunc.setAttribute("style", "display: block;");
+      memberFunc.setAttribute("style", "display: none;");
+    }
   }
 };
 
