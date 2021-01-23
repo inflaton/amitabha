@@ -634,9 +634,7 @@ Parse.Cloud.define(
     requireAuth(user);
     const userId = user.id;
 
-    logger.info(
-      `getUserStudyRecord - userId: ${userId} pathname: ${pathname}}`
-    );
+    logger.info(`getUserStudyRecord - userId: ${userId} pathname: ${pathname}`);
 
     pathname = pathname.replace("/amitabha", "");
     var query = new Parse.Query("Submodule");

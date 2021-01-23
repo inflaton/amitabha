@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "rm -rf pages/online && cd apps/web && npm install && npm run build && mv dist ../../pages/online && ../../tools/post-build",
-    "build-staging": "rm -rf pages/online && cd apps/web && npm install && NODE_ENV=staging npm run build && mv dist ../../pages/online && NODE_ENV=staging ../../tools/post-build",
+    "build-staging": "rm -rf pages/online && cd apps/web && npm install && npm run build -- --mode staging && mv dist ../../pages/online && NODE_ENV=staging ../../tools/post-build",
     "start": "node apps/web/server.js"
   },
   "version": "0.1.0"
