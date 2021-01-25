@@ -26,11 +26,10 @@
         </b-input-group-append>
       </b-input-group>
       <hr />
-      <b-input-group class="mt-3" :prepend="`未开始：`">
-        <b-form-input
-          readonly
-          :value="`共 ${groupInfo.available.length} 个 ${groupInfo.name}`"
-        ></b-form-input>
+      <b-input-group
+        class="mt-3"
+        :prepend="`未开始(${groupInfo.available.length})：`"
+      >
         <b-form-select
           v-model="itemToAdd"
           :options="availableItemOptions()"
@@ -39,11 +38,10 @@
           <b-button variant="success" v-on:click="addItem()">开始</b-button>
         </b-input-group-append>
       </b-input-group>
-      <b-input-group class="mt-3" :prepend="`已圆满：`">
-        <b-form-input
-          readonly
-          :value="`共 ${groupInfo.completed.length} 个 ${groupInfo.name}`"
-        ></b-form-input>
+      <b-input-group
+        class="mt-3"
+        :prepend="`已圆满(${groupInfo.completed.length})：`"
+      >
         <b-form-select
           v-model="completedItemToAdd"
           :options="completedItemOptions()"
