@@ -394,12 +394,151 @@ const loadDashboardV2 = async function(parseUser, forStudent) {
   return dashboard;
 };
 
+const loadSelfStudyInfo = async function(parseUser, forDashboard) {
+  const selfStudyInfo = { modules: [], practices: [] };
+  const userId = parseUser._getId();
+  logger.info(
+    `loadSelfStudyInfo - userId: ${userId} forDashboard: ${forDashboard}`
+  );
+
+  var query = new Parse.Query("SelfStudy");
+  query.equalTo("userId", userId);
+  const selfStudy = await query.first();
+  var moduleIds = [];
+  var practiceIds = [];
+  if (selfStudy) {
+    moduleIds = selfStudy.get("modules").active;
+    practiceIds = selfStudy.get("practices").active;
+  }
+
+  query = new Parse.Query("Module");
+  query.ascending("index");
+  const modules = await query.find();
+
+  if (moduleIds.length) {
+    for (var i = 0; i < moduleIds.length; i++) {
+      for (var j = 0; j < modules.length; j++) {
+        if (moduleIds[i] == modules[j]._getId()) {
+          selfStudyInfo.modules.push(modules[j]);
+          modules.splice(j, 1);
+          break;
+        }
+      }
+    }
+  }
+
+  if (forDashboard) {
+    // await loadStudentModuleDetailsV2(userId, selfStudyInfo, selfStudyInfo.modules);
+  } else {
+    selfStudyInfo.completedModules = [];
+    moduleIds = [];
+
+    if (selfStudy) {
+      moduleIds = selfStudy.get("modules").completed;
+    }
+
+    if (moduleIds.length) {
+      for (i = 0; i < moduleIds.length; i++) {
+        for (j = 0; j < modules.length; j++) {
+          if (moduleIds[i] == modules[j]._getId()) {
+            selfStudyInfo.completedModules.push(modules[j]);
+            modules.splice(j, 1);
+            break;
+          }
+        }
+      }
+    }
+    selfStudyInfo.availableModules = modules;
+  }
+
+  query = new Parse.Query("Practice");
+  query.ascending("index");
+  const practices = await query.find();
+
+  if (practiceIds.length) {
+    for (i = 0; i < practiceIds.length; i++) {
+      for (j = 0; j < practices.length; j++) {
+        if (practiceIds[i] == practices[j]._getId()) {
+          selfStudyInfo.practices.push(practices[j]);
+          practices.splice(j, 1);
+          break;
+        }
+      }
+    }
+  }
+
+  if (forDashboard) {
+    selfStudyInfo.counts = [];
+    selfStudyInfo.practiceSubmodules = [];
+    await loadStudentPracticeDetailsV2(
+      userId,
+      selfStudyInfo,
+      selfStudyInfo.practices
+    );
+  } else {
+    practiceIds = [];
+    selfStudyInfo.completedPractices = [];
+    if (selfStudy) {
+      practiceIds = selfStudy.get("practices").completed;
+    }
+
+    if (practiceIds.length) {
+      for (i = 0; i < practiceIds.length; i++) {
+        for (j = 0; j < practices.length; j++) {
+          if (practiceIds[i] == practices[j]._getId()) {
+            selfStudyInfo.completedPractices.push(practices[j]);
+            practices.splice(j, 1);
+            break;
+          }
+        }
+      }
+    }
+    selfStudyInfo.availablePractices = practices;
+  }
+
+  return selfStudyInfo;
+};
+
+Parse.Cloud.define("selfStudy:fetchInfo", async ({ user }) => {
+  requireAuth(user);
+
+  return await loadSelfStudyInfo(user, false);
+});
+
+Parse.Cloud.define(
+  "selfStudy:updateInfo",
+  async ({ user, params: { selfStudyInfo } }) => {
+    const userId = user._getId();
+    logger.info(
+      `selfStudy:updateInfo - userId: ${userId} selfStudyInfo: ${JSON.stringify(
+        selfStudyInfo
+      )}`
+    );
+
+    var query = new Parse.Query("SelfStudy");
+    query.equalTo("userId", userId);
+    var selfStudy = await query.first();
+
+    if (!selfStudy) {
+      selfStudy = new Parse.Object("SelfStudy");
+      selfStudy.set("userId", userId);
+    }
+
+    selfStudy.set("modules", selfStudyInfo.modules);
+    selfStudy.set("practices", selfStudyInfo.practices);
+
+    return await selfStudy.save(null, MASTER_KEY);
+  }
+);
+
 Parse.Cloud.define(
   "home:loadDashboardsV2",
   async ({ user, params: { user: userWithRoles } }) => {
     requireAuth(user);
 
     const result = {};
+    result.selfStudyDashboard = await loadSelfStudyInfo(user, true);
+
     if (userWithRoles.roles.includes("StudentUser")) {
       result.studentDashboard = await loadDashboardV2(user, true);
     }

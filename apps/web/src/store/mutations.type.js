@@ -17,3 +17,5 @@ export const FETCH_STUDENTS_START = "setLoadingStudents";
 export const FETCH_STUDENTS_END = "setStudents";
 export const FETCH_STATS_START = "setLoadingStats";
 export const FETCH_STATS_END = "setStats";
+export const FETCH_SELF_STUDY_START = "setLoadingSelfStudy";
+export const FETCH_SELF_STUDY_END = "setSelfStudy";

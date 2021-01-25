@@ -5,6 +5,7 @@ import home from "./home.module";
 import auth from "./auth.module";
 import user from "./user.module";
 import buddhaclass from "./buddhaclass.module";
+import selfstudy from "./selfstudy.module";
 
 Vue.use(Vuex);
 
@@ -13,6 +14,7 @@ export default new Vuex.Store({
     home,
     buddhaclass,
     user,
-    auth
+    auth,
+    selfstudy
   }
 });

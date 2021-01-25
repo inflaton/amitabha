@@ -42,15 +42,6 @@
         </b-input-group-append>
       </b-input-group>
     </b-form>
-    <div v-for="(buttonName, index) in buttonNames" :key="buttonName + index">
-      <b-button
-        block
-        :variant="selectedIndex == index ? 'warning' : 'info'"
-        @click="importData(index)"
-        >{{ buttonName }}</b-button
-      >
-      <hr />
-    </div>
     <JsonExcel
       class="btn btn-info btn-block"
       :data="parseCsv"
@@ -70,7 +61,6 @@ import TextReader from "../components/TextReader";
 import { VueCsvImport } from "vue-csv-import";
 import JsonExcel from "vue-json-excel";
 import Vue from "vue";
-import importdata from "../store/importdata.module";
 
 Vue.component("JsonExcel", JsonExcel);
 
@@ -88,28 +78,10 @@ export default {
       result: "",
       parseCsv: undefined,
       fields: undefined,
-      buttonNames: [
-        "导入一组心咒",
-        "导入一组共修",
-        "导入二组心咒",
-        "导入二组共修",
-        "导入旁听组心咒",
-        "导入旁听组共修"
-      ],
       selectedIndex: undefined
     };
   },
   methods: {
-    importData(index) {
-      this.selectedIndex = index;
-      console.log(`importData - index: ${index}`);
-
-      this.parseCsv = importdata.parseCsvList[index];
-      // console.log(`importData - parseCsv: ${JSON.stringify(this.parseCsv)}`);
-      console.log(`importData - #records: ${this.parseCsv.length}`);
-
-      this.params = importdata.paramsList[index % 2];
-    },
     onReset(evt) {
       evt.preventDefault();
       window.location.reload();

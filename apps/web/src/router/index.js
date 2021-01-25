@@ -32,6 +32,13 @@ export default new Router({
       meta: { requiresAuth: true }
     },
     {
+      path: "/self-study-management",
+      name: "self-study-management",
+      component: () => import("@/views/SelfStudyManagement"),
+      props: true,
+      meta: { requiresAuth: true }
+    },
+    {
       path: "/reports/:classId/:practiceId/:forAdmin",
       name: "report-management",
       component: () => import("@/views/ReportManagement"),

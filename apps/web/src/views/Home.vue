@@ -6,6 +6,14 @@
     <div v-else>
       <b-tabs pills content-class="mt-3" align="center">
         <b-tab
+          v-if="home.selfStudyDashboard"
+          :title="selfStudyDashboardTitle()"
+          title-item-class="mytab"
+          acitve
+        >
+          <SelfStudyDashboard :dashboard="home.selfStudyDashboard" />
+        </b-tab>
+        <b-tab
           v-if="home.studentDashboard"
           :title="studentDashboardTitle()"
           title-item-class="mytab"
@@ -25,7 +33,7 @@
         </b-tab>
         <b-tab
           v-if="home.systemAdminDashboard"
-          title="学会全部课程"
+          title="全部课程"
           title-item-class="mytab"
           acitve
         >
@@ -37,6 +45,7 @@
 </template>
 
 <script>
+import SelfStudyDashboard from "@/components/SelfStudyDashboard";
 import StudentDashboard from "@/components/StudentDashboard";
 import AdminDashboard from "@/components/AdminDashboard";
 import { mapGetters } from "vuex";
@@ -46,12 +55,16 @@ import store from "@/store";
 export default {
   name: "Home",
   components: {
+    SelfStudyDashboard,
     StudentDashboard,
     AdminDashboard
   },
   methods: {
+    selfStudyDashboardTitle() {
+      return `${this.currentUser.name}的自修`;
+    },
     studentDashboardTitle() {
-      return `${this.currentUser.name}的闻思修`;
+      return `${this.currentUser.name}的共修`;
     },
     classAdminDashboardTitle() {
       return `${this.currentUser.name}${

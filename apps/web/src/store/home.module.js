@@ -30,8 +30,8 @@ const actions = {
       Parse.Cloud.run("home:loadDashboardsV2", { user })
         .then(result => {
           console.log(
-            // `${FETCH_DASHBOARDS} - result: ${JSON.stringify(result)}`
-            `${FETCH_DASHBOARDS} - result: ${result}`
+            `${FETCH_DASHBOARDS} - result: ${JSON.stringify(result)}`
+            // `${FETCH_DASHBOARDS} - result: ${result}`
           );
           commit(FETCH_DASHBOARDS_END, result);
           resolve();
