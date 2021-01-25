@@ -1,7 +1,7 @@
 <template>
   <div class="user-preview">
     <div v-if="dashboard.modules.length === 0" class="user-preview">
-      您还没有开始学习！
+      您还没有开始闻思！
       <hr />
     </div>
     <div v-if="dashboard.practices.length === 0" class="user-preview">
