@@ -32,21 +32,40 @@
       >
         <b-form-select
           v-model="itemToAdd"
+          v-on:change="itemToAddChanged()"
           :options="availableItemOptions()"
         ></b-form-select>
         <b-input-group-append>
+          <b-button
+            v-if="itemToAddUrl"
+            variant="info"
+            :href="itemToAddUrl"
+            target="_blank"
+          >
+            <b-icon icon="book"></b-icon>
+          </b-button>
           <b-button variant="success" v-on:click="addItem()">开始</b-button>
         </b-input-group-append>
       </b-input-group>
+      <hr />
       <b-input-group
         class="mt-3"
         :prepend="`已圆满(${groupInfo.completed.length})：`"
       >
         <b-form-select
           v-model="completedItemToAdd"
+          v-on:change="completedItemToAddChanged()"
           :options="completedItemOptions()"
         ></b-form-select>
         <b-input-group-append>
+          <b-button
+            v-if="completedItemToAddUrl"
+            variant="info"
+            :href="completedItemToAddUrl"
+            target="_blank"
+          >
+            <b-icon icon="book"></b-icon>
+          </b-button>
           <b-button variant="success" v-on:click="addCompletedItem()"
             >开始</b-button
           >
@@ -67,7 +86,9 @@ export default {
   data: function() {
     return {
       itemToAdd: undefined,
-      completedItemToAdd: undefined
+      itemToAddUrl: undefined,
+      completedItemToAdd: undefined,
+      completedItemToAddUrl: undefined
     };
   },
   computed: {
@@ -86,6 +107,25 @@ export default {
       });
       return options;
     },
+    getFullUrl(url) {
+      if (url && !(url.includes("://") || url.indexOf("//") === 0)) {
+        const parentUrl = process.env.VUE_APP_PARENT_URL;
+        if (!url.startsWith(parentUrl)) {
+          return parentUrl + url.replace("..", "");
+        }
+      }
+      return url;
+    },
+    completedItemToAddChanged() {
+      console.log(`addCompletedItem: ${this.completedItemToAdd}`);
+      for (var i = 0; i < this.groupInfo.completed.length; i++) {
+        const item = this.groupInfo.completed[i];
+        if (item.id == this.completedItemToAdd) {
+          this.completedItemToAddUrl = this.getFullUrl(item.url);
+          break;
+        }
+      }
+    },
     addCompletedItem() {
       console.log(`addCompletedItem: ${this.completedItemToAdd}`);
       for (var i = 0; i < this.groupInfo.completed.length; i++) {
@@ -94,6 +134,16 @@ export default {
           this.groupInfo.completed.splice(i, 1);
           this.groupInfo.active.push(item);
           this.$emit("dataChanged", true);
+          break;
+        }
+      }
+    },
+    itemToAddChanged() {
+      console.log(`itemToAdd: ${this.itemToAdd}`);
+      for (var i = 0; i < this.groupInfo.available.length; i++) {
+        const item = this.groupInfo.available[i];
+        if (item.id == this.itemToAdd) {
+          this.itemToAddUrl = this.getFullUrl(item.url);
           break;
         }
       }

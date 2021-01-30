@@ -12,16 +12,12 @@
           ></b-form-input>
           <b-input-group-append>
             <b-button
+              v-if="practiceObj.url"
               variant="info"
-              v-on:click="
-                practiceObj.showDescription = !practiceObj.showDescription
-              "
+              :href="practiceObj.url"
+              target="_blank"
             >
-              <b-icon
-                v-if="practiceObj.showDescription"
-                icon="chevron-double-up"
-              ></b-icon>
-              <b-icon v-else icon="chevron-double-down"></b-icon>
+              <b-icon icon="book"></b-icon>
             </b-button>
           </b-input-group-append>
         </b-input-group>
@@ -121,14 +117,6 @@
             </b-input-group-append>
           </b-input-group>
         </b-form>
-        <b-form-textarea
-          v-if="practiceObj.showDescription"
-          v-model="practiceObj.description"
-          placeholder=""
-          rows="3"
-          max-rows="8"
-          readonly
-        ></b-form-textarea>
         <div v-if="practiceCounts">
           <div v-if="!forAdmin">
             <hr />
@@ -177,8 +165,7 @@ export default {
     return {
       practiceObj: {
         name: this.practice.get("name"),
-        description: this.practice.get("description"),
-        showDescription: false,
+        url: this.getFullUrl(this.practice.get("url")),
         showReportingCount: false,
         newCountReportedAt: "",
         newCount: "",
@@ -191,6 +178,15 @@ export default {
     };
   },
   methods: {
+    getFullUrl(url) {
+      if (url && !(url.includes("://") || url.indexOf("//") === 0)) {
+        const parentUrl = process.env.VUE_APP_PARENT_URL;
+        if (!url.startsWith(parentUrl)) {
+          return parentUrl + url.replace("..", "");
+        }
+      }
+      return url;
+    },
     buildPracticeCountFields() {
       var fields = [
         {

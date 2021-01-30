@@ -66,25 +66,25 @@ export default {
         this.groupInfoList = [];
         var groupInfo = { name: "模块", header: "正在闻思" };
         groupInfo.active = this.selfStudyInfo.modules.map(e => {
-          return { id: e._getId(), name: e.get("name") };
+          return { id: e._getId(), name: e.get("name"), url: e.get("url") };
         });
         groupInfo.available = this.selfStudyInfo.availableModules.map(e => {
-          return { id: e._getId(), name: e.get("name") };
+          return { id: e._getId(), name: e.get("name"), url: e.get("url") };
         });
         groupInfo.completed = this.selfStudyInfo.completedModules.map(e => {
-          return { id: e._getId(), name: e.get("name") };
+          return { id: e._getId(), name: e.get("name"), url: e.get("url") };
         });
         this.groupInfoList.push(groupInfo);
 
         groupInfo = { name: "修法", header: "正在实修" };
         groupInfo.active = this.selfStudyInfo.practices.map(e => {
-          return { id: e._getId(), name: e.get("name") };
+          return { id: e._getId(), name: e.get("name"), url: e.get("url") };
         });
         groupInfo.available = this.selfStudyInfo.availablePractices.map(e => {
-          return { id: e._getId(), name: e.get("name") };
+          return { id: e._getId(), name: e.get("name"), url: e.get("url") };
         });
         groupInfo.completed = this.selfStudyInfo.completedPractices.map(e => {
-          return { id: e._getId(), name: e.get("name") };
+          return { id: e._getId(), name: e.get("name"), url: e.get("url") };
         });
         this.groupInfoList.push(groupInfo);
       }
