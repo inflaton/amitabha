@@ -173,10 +173,6 @@ const loadPracticeSnapshotsV2 = async function(practices) {
 };
 
 const loadUserStudyRecord = async function(userId, submoduleId) {
-  // logger.info(
-  //   `loadUserStudyRecord - userId: ${userId} submoduleId: ${submoduleId}`
-  // );
-
   var result = {};
   var query = new Parse.Query("UserStudyRecord");
   query.equalTo("userId", userId);
@@ -394,6 +390,109 @@ const loadDashboardV2 = async function(parseUser, forStudent) {
   return dashboard;
 };
 
+const loadUserModuleInfo = async function(userId, moduleId, forDashboard) {
+  var query = new Parse.Query("Submodule");
+  query.equalTo("moduleId", moduleId);
+  query.ascending("index");
+  const parseSubmodules = await query.limit(MAX_QUERY_COUNT).find();
+  const userModuleInfo = {
+    totalSubmodules: parseSubmodules.length,
+    completedSubmodules: 0,
+    submodules: [],
+    completed: forDashboard ? undefined : []
+  };
+  const submoduleIds = parseSubmodules.map(e => e.id);
+
+  query = new Parse.Query("UserStudyRecord");
+  query.equalTo("userId", userId);
+  query.containedIn("submoduleId", submoduleIds);
+  const parseUserStudyRecords = await query.limit(MAX_QUERY_COUNT).find();
+
+  var maxIndex = -1,
+    latestSubmoduleId,
+    latestSubmoduleStudyRecord = {};
+  for (var j = 0; j < parseUserStudyRecords.length; j++) {
+    const record = parseUserStudyRecords[j];
+    const submoduleId = record.get("submoduleId");
+    const index = submoduleIds.indexOf(submoduleId);
+    if (index > maxIndex) {
+      latestSubmoduleId = submoduleId;
+      latestSubmoduleStudyRecord = record;
+      maxIndex = index;
+    }
+    if (record.get("lineage") && record.get("textbook")) {
+      userModuleInfo.completedSubmodules += 1;
+    }
+  }
+
+  for (j = 0; j < parseSubmodules.length; j++) {
+    const parseSubmodule = parseSubmodules[j];
+    if (
+      !forDashboard ||
+      userModuleInfo.submodules.length == 1 ||
+      !latestSubmoduleId ||
+      parseSubmodule.id == latestSubmoduleId
+    ) {
+      const submodule = {};
+      submodule.id = parseSubmodule.id;
+      submodule.index = parseSubmodule.get("index");
+      submodule.name = parseSubmodule.get("name");
+      submodule.url = parseSubmodule.get("url");
+      submodule.moduleId = parseSubmodule.get("moduleId");
+
+      if (forDashboard) {
+        submodule.studyRecord =
+          userModuleInfo.submodules.length == 0
+            ? {
+                lineage: latestSubmoduleStudyRecord.get("lineage"),
+                textbook: latestSubmoduleStudyRecord.get("textbook")
+              }
+            : {};
+        userModuleInfo.submodules.push(submodule);
+
+        if (userModuleInfo.submodules.length == 2) {
+          break;
+        }
+      } else {
+        submodule.studyRecord = {};
+        for (var i = 0; i < parseUserStudyRecords.length; i++) {
+          const record = parseUserStudyRecords[i];
+          if (submodule.id == record.get("submoduleId")) {
+            submodule.studyRecord = {
+              lineage: record.get("lineage"),
+              textbook: record.get("textbook")
+            };
+            break;
+          }
+        }
+        if (submodule.studyRecord.lineage && submodule.studyRecord.textbook) {
+          userModuleInfo.completed.splice(0, 0, submodule);
+        } else {
+          userModuleInfo.submodules.push(submodule);
+        }
+      }
+    }
+  }
+
+  return userModuleInfo;
+};
+
+const loadStudentModuleDetails = async function(
+  userId,
+  selfStudyInfo,
+  modules
+) {
+  selfStudyInfo.moduleDetails = [];
+  for (var i = 0; i < modules.length; i++) {
+    const userModuleInfo = await loadUserModuleInfo(
+      userId,
+      modules[i].id,
+      true
+    );
+    selfStudyInfo.moduleDetails.push(userModuleInfo);
+  }
+};
+
 const loadSelfStudyInfo = async function(parseUser, forDashboard) {
   const selfStudyInfo = { modules: [], practices: [] };
   const userId = parseUser._getId();
@@ -428,7 +527,11 @@ const loadSelfStudyInfo = async function(parseUser, forDashboard) {
   }
 
   if (forDashboard) {
-    // await loadStudentModuleDetailsV2(userId, selfStudyInfo, selfStudyInfo.modules);
+    await loadStudentModuleDetails(
+      userId,
+      selfStudyInfo,
+      selfStudyInfo.modules
+    );
   } else {
     selfStudyInfo.completedModules = [];
     moduleIds = [];
@@ -552,6 +655,21 @@ Parse.Cloud.define(
     }
 
     return result;
+  }
+);
+
+Parse.Cloud.define(
+  "selfStudy:fetchModuleInfo",
+  async ({ user, params: { moduleId } }) => {
+    requireAuth(user);
+
+    const userModuleInfo = await loadUserModuleInfo(user.id, moduleId, false);
+
+    var query = new Parse.Query("Module");
+    query.equalTo("objectId", moduleId);
+    userModuleInfo.module = await query.first();
+
+    return userModuleInfo;
   }
 );
 

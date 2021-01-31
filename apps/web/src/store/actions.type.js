@@ -19,3 +19,4 @@ export const UPDATE_TEAM = "updateTeam";
 export const RESET_STUDENTS = "resetStudents";
 export const FETCH_STATS = "fetchStats";
 export const FETCH_SELF_STUDY = "fetchSelfStudy";
+export const FETCH_MODULE_DETAILS = "fetchModuleDetails";

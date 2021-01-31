@@ -1,14 +1,21 @@
 import Parse from "parse";
 import Toasted from "vue-toasted";
 import Vue from "vue";
-import { FETCH_SELF_STUDY } from "./actions.type";
-import { FETCH_SELF_STUDY_START, FETCH_SELF_STUDY_END } from "./mutations.type";
+import { FETCH_SELF_STUDY, FETCH_MODULE_DETAILS } from "./actions.type";
+import {
+  FETCH_SELF_STUDY_START,
+  FETCH_SELF_STUDY_END,
+  FETCH_MODULE_DETAILS_START,
+  FETCH_MODULE_DETAILS_END
+} from "./mutations.type";
 
 Vue.use(Toasted);
 
 const state = {
   isLoadingSelfStudy: false,
-  selfStudyInfo: {}
+  isLoadingModuleInfo: false,
+  selfStudyInfo: {},
+  userModuleInfo: {}
 };
 
 const getters = {
@@ -17,6 +24,12 @@ const getters = {
   },
   selfStudyInfo(st) {
     return st.selfStudyInfo;
+  },
+  userModuleInfo(st) {
+    return st.userModuleInfo;
+  },
+  isLoadingModuleInfo(st) {
+    return st.isLoadingModuleInfo;
   }
 };
 
@@ -28,12 +41,29 @@ const actions = {
     Parse.Cloud.run(fetchInfo)
       .then(selfStudyInfo => {
         console.log(
-          `${fetchInfo} - selfStudyInfo: ${JSON.stringify(selfStudyInfo)}`
+          // `${fetchInfo} - selfStudyInfo: ${JSON.stringify(selfStudyInfo)}`
+          `${fetchInfo} - selfStudyInfo: ${selfStudyInfo}`
         );
         context.commit(FETCH_SELF_STUDY_END, selfStudyInfo);
       })
       .catch(e => {
         console.log(`error loading selfStudyInfo: ${JSON.stringify(e)}`);
+        throw new Error(e);
+      });
+  },
+  [FETCH_MODULE_DETAILS](context, params) {
+    context.commit(FETCH_MODULE_DETAILS_START);
+
+    const fetchInfo = "selfStudy:fetchModuleInfo";
+    Parse.Cloud.run(fetchInfo, { moduleId: params["moduleId"] })
+      .then(userModuleInfo => {
+        console.log(
+          `${fetchInfo} - userModuleInfo: ${JSON.stringify(userModuleInfo)}`
+        );
+        context.commit(FETCH_MODULE_DETAILS_END, userModuleInfo);
+      })
+      .catch(e => {
+        console.log(`error loading userModuleInfo: ${JSON.stringify(e)}`);
         throw new Error(e);
       });
   }
@@ -47,6 +77,13 @@ const mutations = {
   [FETCH_SELF_STUDY_END](st, selfStudyInfo) {
     st.selfStudyInfo = selfStudyInfo;
     st.isLoadingSelfStudy = false;
+  },
+  [FETCH_MODULE_DETAILS_START](st) {
+    st.isLoadingModuleInfo = true;
+  },
+  [FETCH_MODULE_DETAILS_END](st, userModuleInfo) {
+    st.userModuleInfo = userModuleInfo;
+    st.isLoadingModuleInfo = false;
   }
 };
 

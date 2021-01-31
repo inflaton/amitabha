@@ -4,6 +4,18 @@
       您还没有开始闻思！
       <hr />
     </div>
+    <h4 v-if="dashboard.modules.length > 0">正在闻思</h4>
+    <div v-for="(module, index) in dashboard.modules" :key="module.id + index">
+      <Module
+        :parseModule="module"
+        :moduleDetails="dashboard.moduleDetails[index]"
+        :submodules="dashboard.moduleDetails[index].submodules"
+      />
+      <b-button block variant="info" @click="showModuleDetails(module)"
+        >查看详情</b-button
+      >
+      <hr />
+    </div>
     <div v-if="dashboard.practices.length === 0" class="user-preview">
       您还没有开始实修！
       <hr />
@@ -30,6 +42,7 @@
 </template>
 
 <script>
+import Module from "./Module.vue";
 import Practice from "./Practice";
 
 export default {
@@ -38,9 +51,18 @@ export default {
     dashboard: { type: Object, required: true }
   },
   components: {
-    Practice
+    Practice,
+    Module
   },
   methods: {
+    showModuleDetails(module) {
+      this.$router.push({
+        name: "study-records",
+        params: {
+          moduleId: module.id
+        }
+      });
+    },
     listPracticeCount(practice) {
       this.$router.push({
         name: "count-list",

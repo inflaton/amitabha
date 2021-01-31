@@ -19,3 +19,5 @@ export const FETCH_STATS_START = "setLoadingStats";
 export const FETCH_STATS_END = "setStats";
 export const FETCH_SELF_STUDY_START = "setLoadingSelfStudy";
 export const FETCH_SELF_STUDY_END = "setSelfStudy";
+export const FETCH_MODULE_DETAILS_START = "setLoadingModuleDetails";
+export const FETCH_MODULE_DETAILS_END = "setModuleInfo";

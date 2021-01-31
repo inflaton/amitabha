@@ -46,6 +46,13 @@ export default new Router({
       meta: { requiresAuth: true }
     },
     {
+      path: "/records/:moduleId",
+      name: "study-records",
+      component: () => import("@/views/ModuleInfo"),
+      props: true,
+      meta: { requiresAuth: true }
+    },
+    {
       path: "/counts/:practiceId/:forAdmin",
       name: "count-list",
       component: () => import("@/views/CountList"),
