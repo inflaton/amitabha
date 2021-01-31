@@ -14,7 +14,11 @@
           <SelfStudyDashboard :dashboard="home.selfStudyDashboard" />
         </b-tab>
         <b-tab
-          v-if="home.studentDashboard"
+          v-if="
+            home.studentDashboard &&
+              (home.studentDashboard.enrolledClasses.length > 0 ||
+                home.studentDashboard.newClasses.length > 0)
+          "
           :title="studentDashboardTitle()"
           title-item-class="mytab"
           acitve
