@@ -114,7 +114,7 @@ export default {
     updateSubmoduleStudyState(index) {
       console.log(`updateSubmoduleStudyState - ${index}`);
 
-      var msg = "确认已圆满$学习?";
+      var msg = "确认已圆满学习?";
 
       const options = {
         okText: "确认",
