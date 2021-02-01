@@ -337,7 +337,8 @@ export default {
         hour: "numeric",
         minute: "numeric"
       };
-      return date.toLocaleDateString("zh-CN", options).substring(2);
+      var result = date.toLocaleDateString("zh-CN", options);
+      return result.startsWith("20") ? result.substring(2) : result;
     },
     toLocalDateString(date) {
       const options = {
