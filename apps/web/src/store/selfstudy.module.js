@@ -58,7 +58,8 @@ const actions = {
     Parse.Cloud.run(fetchInfo, { moduleId: params["moduleId"] })
       .then(userModuleInfo => {
         console.log(
-          `${fetchInfo} - userModuleInfo: ${JSON.stringify(userModuleInfo)}`
+          // `${fetchInfo} - userModuleInfo: ${JSON.stringify(userModuleInfo)}`
+          `${fetchInfo} - userModuleInfo progress: ${userModuleInfo.completedSubmodules}/${userModuleInfo.totalSubmodules}`
         );
         context.commit(FETCH_MODULE_DETAILS_END, userModuleInfo);
       })

@@ -114,7 +114,7 @@ export default {
     updateSubmoduleStudyState(index) {
       console.log(`updateSubmoduleStudyState - ${index}`);
 
-      var msg = `确认已圆满${this.selfStudy ? "学习" : "传承和法本?"}`;
+      var msg = "确认已圆满$学习?";
 
       const options = {
         okText: "确认",
@@ -132,7 +132,7 @@ export default {
         .confirm(message, options)
         .then(function(dialog) {
           Parse.Cloud.run("home:updateUserStudyRecord", {
-            pathname: this.submodules[index].url,
+            pathname: thisComponent.submodules[index].url,
             userStudyRecord
           })
             .then(result => {
