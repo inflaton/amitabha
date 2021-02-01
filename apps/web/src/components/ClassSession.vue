@@ -478,7 +478,8 @@ export default {
         month: "short",
         day: "numeric"
       };
-      return date.toLocaleDateString("zh-CN", options).substring(2);
+      var result = date.toLocaleDateString("zh-CN", options);
+      return result.startsWith("20") ? result.substring(2) : result;
     },
     needToShowAttendanceButton() {
       if (
