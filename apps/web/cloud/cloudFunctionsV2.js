@@ -410,7 +410,7 @@ const loadUserModuleInfo = async function(userId, moduleId, forDashboard) {
 
   var maxIndex = -1,
     latestSubmoduleId,
-    latestSubmoduleStudyRecord = {};
+    latestSubmoduleStudyRecord = undefined;
   for (var j = 0; j < parseUserStudyRecords.length; j++) {
     const record = parseUserStudyRecords[j];
     const submoduleId = record.get("submoduleId");
@@ -442,7 +442,7 @@ const loadUserModuleInfo = async function(userId, moduleId, forDashboard) {
 
       if (forDashboard) {
         submodule.studyRecord =
-          userModuleInfo.submodules.length == 0
+          userModuleInfo.submodules.length == 0 && latestSubmoduleStudyRecord
             ? {
                 lineage: latestSubmoduleStudyRecord.get("lineage"),
                 textbook: latestSubmoduleStudyRecord.get("textbook")
