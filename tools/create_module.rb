@@ -11,19 +11,23 @@ def process_file(module_html, module_id, module_index)
 
     doc = File.open(module_html) { |f| Nokogiri::HTML(f) }
 
-    module_csv = File.open("./csv/modules.csv", 'w')
+    filename = "./csv/modules.csv"
+    fileExisted = File.file?(filename)
+    module_csv = File.open(filename, fileExisted ? 'a' : 'w')
     module_url = module_html.gsub('pages/', '')
-    module_csv.puts "objectId,name,url,index"
+    if (!fileExisted)
+      module_csv.puts "objectId,name,url,index"
+    end
     module_csv.puts "#{module_id},#{doc.title},#{module_url},#{module_index}"
 
     i = 1
 
     doc.css('h1').each do |h1|
-        href = h1.parent['href']
-        puts "Processing #{h1.text} #{href} ..."
-        csv.puts "#{i},#{h1.text},#{href},#{module_id}"
+      href = h1.parent.parent.last_element_child['href']
+      puts "Processing #{h1.text} #{href} ..."
+      csv.puts "#{i},#{h1.text},#{href},#{module_id}"
 
-        i += 1
+      i += 1
     end
  
   nil
