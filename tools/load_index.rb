@@ -10,10 +10,12 @@ def process_index(template_file, input_dir, output_dir)
 
   doc.css('h1').each do |h1|
     href = h1.parent['href']
-    puts "Processing #{h1.text} #{href} ..."
-    input_file  = input_dir + href
-    output_file  = output_dir + href
-    refresh_one_file(template_file, input_file, output_file, 2)
+    if href
+      puts "Processing #{h1.text} #{href} ..."
+      input_file  = input_dir + href
+      output_file  = output_dir + href
+      refresh_one_file(template_file, input_file, output_file, 2)
+    end
   end
   nil
 end
