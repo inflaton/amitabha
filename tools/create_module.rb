@@ -14,11 +14,13 @@ def process_file(module_html, module_id, module_index)
     filename = "./csv/modules.csv"
     fileExisted = File.file?(filename)
     module_csv = File.open(filename, fileExisted ? 'a' : 'w')
-    module_url = module_html.gsub('pages/', '')
+    module_url = module_html.gsub('../pages/', '../')
     if (!fileExisted)
       module_csv.puts "objectId,name,url,index"
     end
-    module_csv.puts "#{module_id},#{doc.title},#{module_url},#{module_index}"
+    module_title = doc.title
+    module_title.strip!
+    module_csv.puts "#{module_id},#{module_title},#{module_url},#{module_index}"
 
     i = 1
 
