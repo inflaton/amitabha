@@ -40,6 +40,14 @@ def refresh_one_file(template_file, input_file, output_file, level)
   # end
 
   #result = template.sub('<article />', node.to_s.gsub('"../', '"'))
+  #<p style="text-align:center;"><img src="../../../y3.ifengimg.com/a/2015_27/97991df4bd18526_size27_w410_h273.jpg"></p>
+  node.css('p').each do |p|
+    img = p.first_element_child
+    if img && img["src"] && img["src"].include?("fengimg.com")
+      p.remove()
+    end
+  end
+
   result = template.sub('<article />', node.to_s)
   result = result.gsub('title_to_be_replaced', doc.title)
 
