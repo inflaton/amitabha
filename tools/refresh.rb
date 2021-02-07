@@ -56,6 +56,9 @@ def refresh_one_file(template_file, input_file, output_file, level)
     result = result.gsub('</main>', '</article>')
   end
 
+  #（图片来源：凤凰网华人佛教 摄影：曹立君）
+  result = result.gsub(/（图片来源：.*）/, '')
+
   File.open(output_file, 'w') { |file| file.write(result) } 
   puts "Done for #{doc.title} - #{output_file}"
 end
