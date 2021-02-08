@@ -32,7 +32,7 @@
               variant="warning"
               v-on:click="toggleReportingCount()"
               >{{
-                practiceObj.showReportingCount ? "完成报数" : "我要报数"
+                practiceObj.showReportingCount ? "取消报数" : "我要报数"
               }}</b-button
             >
           </b-input-group-append>
@@ -473,12 +473,13 @@ export default {
               thisComponent.practiceCountObj = thisComponent.buildPracticeCountObj(
                 result
               );
-              thisComponent.resetReportingUI();
 
               dialog.close();
               if (thisComponent.practiceCounts) {
                 // thisComponent.$router.go();
                 window.location.reload();
+              } else {
+                thisComponent.toggleReportingCount();
               }
             })
             .catch(e => {
