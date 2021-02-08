@@ -631,6 +631,47 @@ const remindClassReporting = async function(classId) {
   return { lastWeek, lastWeekForEmail, emailsSent };
 };
 
+const updateUserStudyRecord = async function(user, pathname, userStudyRecord) {
+  requireAuth(user);
+
+  const result = {};
+  const userId = user.id;
+
+  logger.info(
+    `updateUserStudyRecord - userId: ${userId} pathname: ${pathname}}`
+  );
+
+  pathname = pathname.replace("/amitabha", "");
+  var query = new Parse.Query("Submodule");
+  query.contains("url", pathname);
+  var submodule = await query.first();
+
+  if (submodule) {
+    const submoduleId = submodule._getId();
+    query = new Parse.Query("UserStudyRecord");
+
+    query.equalTo("userId", userId);
+    query.equalTo("submoduleId", submoduleId);
+    var parseUserStudyRecord = await query.first();
+
+    if (!parseUserStudyRecord) {
+      parseUserStudyRecord = new Parse.Object("UserStudyRecord");
+      parseUserStudyRecord.set("userId", user.id);
+      parseUserStudyRecord.set("submoduleId", submoduleId);
+    }
+
+    parseUserStudyRecord.set("lineage", userStudyRecord.lineage);
+    parseUserStudyRecord.set("textbook", userStudyRecord.textbook);
+
+    parseUserStudyRecord = await parseUserStudyRecord.save(null, MASTER_KEY);
+
+    result.lineage = parseUserStudyRecord.get("lineage");
+    result.textbook = parseUserStudyRecord.get("textbook");
+  }
+
+  return result;
+};
+
 module.exports = {
   requireAuth,
   requireRole,
@@ -645,5 +686,6 @@ module.exports = {
   toLocalDateString,
   getLastWeek,
   loadStudentAttendanceV2,
+  updateUserStudyRecord,
   DAY_IN_MS
 };

@@ -674,6 +674,28 @@ Parse.Cloud.define(
 );
 
 Parse.Cloud.define(
+  "selfStudy:updateSubmoduleStudyState",
+  async ({ user, params: { submodule, userStudyRecord, forDashboard } }) => {
+    const result = await commonFunctions.updateUserStudyRecord(
+      user,
+      submodule.url,
+      userStudyRecord
+    );
+
+    var userModuleInfo;
+    if (forDashboard) {
+      userModuleInfo = await loadUserModuleInfo(
+        user.id,
+        submodule.moduleId,
+        true
+      );
+    }
+
+    return { result, userModuleInfo };
+  }
+);
+
+Parse.Cloud.define(
   "home:updateAttendanceV2",
   async ({ user, params: { classId, sessionId, attendance } }) => {
     return await commonFunctions.updateAttendanceV2(

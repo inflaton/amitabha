@@ -10,6 +10,7 @@
           :parseModule="userModuleInfo.module"
           :moduleDetails="userModuleInfo"
           :submodules="userModuleInfo.submodules"
+          @submoduleCompleted="onSubmoduleCompleted"
         />
       </b-tab>
       <b-tab title="已圆满" title-item-class="mytab" acitve>
@@ -41,6 +42,24 @@ export default {
     store.dispatch(FETCH_MODULE_DETAILS, to.params).then(() => {
       next();
     });
+  },
+  methods: {
+    onSubmoduleCompleted(value) {
+      for (var i = 0; i < this.userModuleInfo.submodules.length; i++) {
+        const submodule = this.userModuleInfo.submodules[i];
+        if (submodule.id == value.submodule.id) {
+          this.userModuleInfo.submodules.splice(i, 1);
+          submodule.studyRecord = value.result.result;
+          for (var j = 0; j < this.userModuleInfo.completed.length; j++) {
+            if (submodule.index > this.userModuleInfo.completed[j].index) {
+              this.userModuleInfo.completed.splice(j, 0, submodule);
+              break;
+            }
+          }
+          break;
+        }
+      }
+    }
   }
 };
 </script>

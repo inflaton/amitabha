@@ -121,26 +121,30 @@ export default {
         cancelText: "取消",
         loader: true // default: false - when set to true, the proceed button shows a loader when clicked; and a dialog object will be passed to the then() callback
       };
+      const submodule = this.submodules[index];
       const message = {
-        title: this.submodules[index].name,
+        title: submodule.name,
         body: msg
       };
       const thisComponent = this;
       const userStudyRecord = { lineage: true, textbook: true };
+      const forDashboard = !this.showIncompleted;
 
       this.$dialog
         .confirm(message, options)
         .then(function(dialog) {
-          Parse.Cloud.run("home:updateUserStudyRecord", {
-            pathname: thisComponent.submodules[index].url,
-            userStudyRecord
+          Parse.Cloud.run("selfStudy:updateSubmoduleStudyState", {
+            submodule,
+            userStudyRecord,
+            forDashboard
           })
             .then(result => {
               console.log(
-                `updateUserStudyRecord - result: ${JSON.stringify(result)}`
+                `updateSubmoduleStudyState - result: ${JSON.stringify(result)}`
               );
               dialog.close();
-              window.location.reload();
+              // window.location.reload();
+              thisComponent.$emit("submoduleCompleted", { submodule, result });
             })
             .catch(e => {
               console.log(`error in updateUserStudyRecord: ${e}`);

@@ -10,6 +10,7 @@
         :parseModule="module"
         :moduleDetails="dashboard.moduleDetails[index]"
         :submodules="dashboard.moduleDetails[index].submodules"
+        @submoduleCompleted="onSubmoduleCompleted"
       />
       <b-button block variant="info" @click="showModuleDetails(module)"
         >查看详情</b-button
@@ -55,6 +56,15 @@ export default {
     Module
   },
   methods: {
+    onSubmoduleCompleted(value) {
+      for (var i = 0; i < this.dashboard.modules.length; i++) {
+        if (this.dashboard.modules[i].id == value.submodule.moduleId) {
+          const module = this.dashboard.moduleDetails[i];
+          module.submodules = value.result.userModuleInfo.submodules;
+          break;
+        }
+      }
+    },
     showModuleDetails(module) {
       this.$router.push({
         name: "study-records",
