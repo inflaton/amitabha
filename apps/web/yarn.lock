@@ -1311,9 +1311,7 @@
   dependencies:
     "@vue/cli-shared-utils" "^3.12.1"
     "babel-eslint" "^10.0.1"
-    "eslint" "^4.19.1"
     "eslint-loader" "^2.1.2"
-    "eslint-plugin-vue" "^4.7.1"
     "globby" "^9.2.0"
     "webpack" "^4.0.0"
     "yorkie" "^2.0.0"
@@ -2911,7 +2909,6 @@
     "anymatch" "^2.0.0"
     "async-each" "^1.0.1"
     "braces" "^2.3.2"
-    "fsevents" "^1.2.7"
     "glob-parent" "^3.1.0"
     "inherits" "^2.0.3"
     "is-binary-path" "^1.0.0"
@@ -4308,7 +4305,6 @@
     "estraverse" "^4.2.0"
     "esutils" "^2.0.2"
     "optionator" "^0.8.1"
-    "source-map" "~0.6.1"
   optionalDependencies:
     "source-map" "~0.6.1"
 
@@ -5317,7 +5313,6 @@
     "minimist" "^1.2.5"
     "neo-async" "^2.6.0"
     "source-map" "^0.6.1"
-    "uglify-js" "^3.1.4"
     "wordwrap" "^1.0.0"
   optionalDependencies:
     "uglify-js" "^3.1.4"
@@ -6541,7 +6536,6 @@
     "@jest/types" "^24.9.0"
     "anymatch" "^2.0.0"
     "fb-watchman" "^2.0.0"
-    "fsevents" "^1.2.7"
     "graceful-fs" "^4.1.15"
     "invariant" "^2.2.4"
     "jest-serializer" "^24.9.0"
@@ -9868,7 +9862,6 @@
     "capture-exit" "^1.2.0"
     "exec-sh" "^0.2.0"
     "fb-watchman" "^2.0.0"
-    "fsevents" "^1.2.3"
     "micromatch" "^3.1.4"
     "minimist" "^1.1.1"
     "walker" "~1.0.5"
@@ -11437,10 +11430,8 @@
   "resolved" "https://registry.npmjs.org/watchpack/-/watchpack-1.7.5.tgz"
   "version" "1.7.5"
   dependencies:
-    "chokidar" "^3.4.1"
     "graceful-fs" "^4.1.2"
     "neo-async" "^2.5.0"
-    "watchpack-chokidar2" "^2.0.1"
   optionalDependencies:
     "chokidar" "^3.4.1"
     "watchpack-chokidar2" "^2.0.1"
