@@ -1,18 +1,8 @@
 <template>
   <div>
-    <div v-if="isLoadingDashboards">
-      正在获取主页数据...
-    </div>
+    <div v-if="isLoadingDashboards">正在获取主页数据...</div>
     <div v-else>
       <b-tabs pills content-class="mt-3" align="center">
-        <b-tab
-          v-if="home.selfStudyDashboard"
-          :title="selfStudyDashboardTitle()"
-          title-item-class="mytab"
-          acitve
-        >
-          <SelfStudyDashboard :dashboard="home.selfStudyDashboard" />
-        </b-tab>
         <b-tab
           v-if="
             home.studentDashboard &&
@@ -24,6 +14,14 @@
           acitve
         >
           <StudentDashboard :dashboard="home.studentDashboard" />
+        </b-tab>
+        <b-tab
+          v-if="home.selfStudyDashboard"
+          :title="selfStudyDashboardTitle()"
+          title-item-class="mytab"
+          acitve
+        >
+          <SelfStudyDashboard :dashboard="home.selfStudyDashboard" />
         </b-tab>
         <b-tab
           v-if="

@@ -2,8 +2,13 @@
   <div>
     <h3 v-text="buddhaClass.name" />
     <h4>
-      辅导员：{{ teachers }} 师兄&nbsp;&nbsp;
-      <a :href="getFullUrl(buddhaClass.url)" target="_blank">学习资料网页</a>
+      主持人：{{ teachers }} 师兄&nbsp;&nbsp;
+      <a
+        v-if="buddhaClass.url"
+        :href="getFullUrl(buddhaClass.url)"
+        target="_blank"
+        >学习资料网页</a
+      >
     </h4>
     <div v-if="buddhaClass.classSnapshot">
       <b-table

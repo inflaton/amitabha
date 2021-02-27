@@ -29,7 +29,7 @@ const state = {
 const getDisplayRoles = function(userRoles) {
   const array = [
     { name: "StudentUser", displayName: "学员" },
-    { name: "TeacherUser", displayName: "辅导员" },
+    { name: "TeacherUser", displayName: "主持人" },
     { name: "TeachingAssistantUser", displayName: "学修助理" },
     { name: "ClassAdminUser", displayName: "学修管理员" },
     { name: "B4aAdminUser", displayName: "系统管理员" }

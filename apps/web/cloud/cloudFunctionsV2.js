@@ -8,7 +8,7 @@ const loadStudentAttendanceV2 = commonFunctions.loadStudentAttendanceV2;
 const requireAuth = commonFunctions.requireAuth;
 const requireRole = commonFunctions.requireRole;
 
-const loadPracticeSubmodules = async function(moduleId) {
+const loadPracticeSubmodules = async function (moduleId) {
   if (moduleId) {
     var query = new Parse.Query("Submodule");
     query.equalTo("moduleId", moduleId);
@@ -21,7 +21,7 @@ const loadPracticeSubmodules = async function(moduleId) {
   return [];
 };
 
-const loadStudentPracticeDetailsV2 = async function(
+const loadStudentPracticeDetailsV2 = async function (
   userId,
   classInfo,
   practices
@@ -57,7 +57,7 @@ const loadStudentPracticeDetailsV2 = async function(
   }
 };
 
-const generateClassSnapshotJsonV2 = async function(parseClass) {
+const generateClassSnapshotJsonV2 = async function (parseClass) {
   logger.info(`generateClassSnapshotJsonV2 - classId: ${parseClass.id}`);
 
   const result = {};
@@ -77,7 +77,7 @@ const generateClassSnapshotJsonV2 = async function(parseClass) {
   return result;
 };
 
-const generateSessionSnapshotJsonV2 = async function(parseSession) {
+const generateSessionSnapshotJsonV2 = async function (parseSession) {
   logger.info(`generateSessionSnapshotJsonV2 - sessionId: ${parseSession.id}`);
 
   var query = new Parse.Query("UserSessionAttendance");
@@ -106,7 +106,7 @@ const generateSessionSnapshotJsonV2 = async function(parseSession) {
   return { attendance, studyRecords, reportedAt: new Date() };
 };
 
-const generatePracticeSnapshotJsonV2 = async function(parsePractice) {
+const generatePracticeSnapshotJsonV2 = async function (parsePractice) {
   logger.info(
     `generatePracticeSnapshotJsonV2 - practiceId: ${parsePractice.id}`
   );
@@ -126,7 +126,7 @@ const generatePracticeSnapshotJsonV2 = async function(parsePractice) {
   return { accumulatedCount, reportedAt: new Date() };
 };
 
-const loadSnapshotV2 = async function(parseObject, generateSnapshotJson) {
+const loadSnapshotV2 = async function (parseObject, generateSnapshotJson) {
   const objectId = parseObject.id;
   logger.info(`loadSnapshotV2 - objectId: ${objectId}`);
 
@@ -155,7 +155,7 @@ const loadSnapshotV2 = async function(parseObject, generateSnapshotJson) {
   return snapshot.get("value");
 };
 
-const loadPracticeSnapshotsV2 = async function(practices) {
+const loadPracticeSnapshotsV2 = async function (practices) {
   logger.info(`loadPracticeSnapshots - practices: ${practices}`);
 
   var result = [];
@@ -172,7 +172,7 @@ const loadPracticeSnapshotsV2 = async function(practices) {
   return result;
 };
 
-const loadUserStudyRecord = async function(userId, submoduleId) {
+const loadUserStudyRecord = async function (userId, submoduleId) {
   var result = {};
   var query = new Parse.Query("UserStudyRecord");
   query.equalTo("userId", userId);
@@ -186,7 +186,7 @@ const loadUserStudyRecord = async function(userId, submoduleId) {
   return result;
 };
 
-const getClassSessionDetails = async function(
+const getClassSessionDetails = async function (
   userId,
   classSession,
   forStudent
@@ -226,7 +226,7 @@ const getClassSessionDetails = async function(
   return { attendance, submodules };
 };
 
-const loadClassSessionDetails = async function(
+const loadClassSessionDetails = async function (
   userId,
   classInfo,
   classSession,
@@ -243,14 +243,14 @@ const loadClassSessionDetails = async function(
   }
 };
 
-const loadUserRoles = async function(parseUser) {
+const loadUserRoles = async function (parseUser) {
   var userRoleQuery = new Parse.Query(Parse.Role);
   userRoleQuery.equalTo("users", parseUser);
   const roles = await userRoleQuery.find(MASTER_KEY);
   return roles.length > 0 ? roles.map(r => r.get("name")) : ["StudentUser"];
 };
 
-const loadClassTeachers = async function(parseClass) {
+const loadClassTeachers = async function (parseClass) {
   const teachers = [];
   var query = parseClass.relation("classAdminUsers").query();
   var classAdminUsers = await query.find();
@@ -266,23 +266,23 @@ const loadClassTeachers = async function(parseClass) {
   return teachers;
 };
 
-const loadDashboardV2 = async function(parseUser, forStudent) {
+const loadDashboardV2 = async function (parseUser, forStudent) {
   const userId = parseUser ? parseUser._getId() : undefined;
   const dashboard = forStudent
     ? {
-        enrolledClasses: [],
-        newClasses: []
-      }
+      enrolledClasses: [],
+      newClasses: []
+    }
     : {
-        classes: []
-      };
+      classes: []
+    };
 
   var query = new Parse.Query("Class");
+  query.notEqualTo("deactivated", true);
 
   var canDownloadReports = true;
   //undefined if loading System Admin Dashboard
   if (parseUser) {
-    query.notEqualTo("deactivated", true);
     if (forStudent) {
       query.equalTo("students", parseUser);
       canDownloadReports = false;
@@ -390,7 +390,7 @@ const loadDashboardV2 = async function(parseUser, forStudent) {
   return dashboard;
 };
 
-const loadUserModuleInfo = async function(userId, moduleId, forDashboard) {
+const loadUserModuleInfo = async function (userId, moduleId, forDashboard) {
   var query = new Parse.Query("Submodule");
   query.equalTo("moduleId", moduleId);
   query.ascending("index");
@@ -444,9 +444,9 @@ const loadUserModuleInfo = async function(userId, moduleId, forDashboard) {
         submodule.studyRecord =
           userModuleInfo.submodules.length == 0 && latestSubmoduleStudyRecord
             ? {
-                lineage: latestSubmoduleStudyRecord.get("lineage"),
-                textbook: latestSubmoduleStudyRecord.get("textbook")
-              }
+              lineage: latestSubmoduleStudyRecord.get("lineage"),
+              textbook: latestSubmoduleStudyRecord.get("textbook")
+            }
             : {};
         userModuleInfo.submodules.push(submodule);
 
@@ -477,7 +477,7 @@ const loadUserModuleInfo = async function(userId, moduleId, forDashboard) {
   return userModuleInfo;
 };
 
-const loadStudentModuleDetails = async function(
+const loadStudentModuleDetails = async function (
   userId,
   selfStudyInfo,
   modules
@@ -493,7 +493,7 @@ const loadStudentModuleDetails = async function(
   }
 };
 
-const loadSelfStudyInfo = async function(parseUser, forDashboard) {
+const loadSelfStudyInfo = async function (parseUser, forDashboard) {
   const selfStudyInfo = { modules: [], practices: [] };
   const userId = parseUser._getId();
   logger.info(
@@ -793,7 +793,7 @@ Parse.Cloud.define(
   }
 );
 
-const loadNewSessions = async function(parseClass, classInfo) {
+const loadNewSessions = async function (parseClass, classInfo) {
   var submoduleIds = [];
   for (var i = 0; i < classInfo.sessionDetails.length; i++) {
     for (var j = 0; j < classInfo.sessionDetails[i].submodules.length; j++) {
@@ -937,7 +937,7 @@ Parse.Cloud.define(
   }
 );
 
-const getClassAdminStudents = async function(classAdminUsers) {
+const getClassAdminStudents = async function (classAdminUsers) {
   const classAdminStudents = [];
   for (var i = 0; i < classAdminUsers.length; i++) {
     const parseUser = classAdminUsers[i];
@@ -955,7 +955,7 @@ const getClassAdminStudents = async function(classAdminUsers) {
   return classAdminStudents;
 };
 
-const loadTeams = async function(
+const loadTeams = async function (
   user,
   userWithRoles,
   classId,
@@ -1293,7 +1293,7 @@ Parse.Cloud.define(
   }
 );
 
-const loadDataForUser = async function(
+const loadDataForUser = async function (
   selfStudy,
   formalStudy,
   parseClass,
@@ -1410,7 +1410,7 @@ const loadDataForUser = async function(
   return result;
 };
 
-const loadDetailedDataForUser = async function(
+const loadDetailedDataForUser = async function (
   mapDates,
   parsePractice,
   parseCountList,

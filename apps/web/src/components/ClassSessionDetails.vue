@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!--
     <div v-if="!classInfo.forAdmin && !classInfo.forApplication">
       <DownloadReport
         :forSelf="true"
@@ -15,6 +16,7 @@
       />
       <hr />
     </div>
+    -->
     <div class="input-group mb-3" v-if="!selfStudy">
       <input
         type="text"
@@ -122,7 +124,7 @@ export default {
       };
       const message = {
         title: this.classInfo.name,
-        body: `顶礼上师三宝！真的要报名？`
+        body: `南无阿弥陀佛！真的要报名？`
       };
       const thisComponent = this;
 

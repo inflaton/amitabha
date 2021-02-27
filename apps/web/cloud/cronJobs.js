@@ -4,7 +4,7 @@
 const commonFunctions = require("./commonFunctions.js");
 const logger = require("parse-server").logger;
 
-Parse.Cloud.job("removeInvalidLogin", async function(request, status) {
+Parse.Cloud.job("removeInvalidLogin", async function (request, status) {
   var date = new Date();
   var timeNow = date.getTime();
 
@@ -33,7 +33,7 @@ Parse.Cloud.job("removeInvalidLogin", async function(request, status) {
           const subject = "用户账号注销通知";
           const body = `${user.get(
             "name"
-          )}师兄，\n\n顶礼上师三宝！因为您没有在一周以内完成电邮地址验证，您用${email}注册的账号已经被注销。如果您还想访问学修平台，请点击以下链接重新注册用户账户：\n\nhttps://amitabha.herokuapp.com/online/#/register \n\n新加坡智悲佛学会\nAMITABHA`;
+          )}师兄，\n\n南无阿弥陀佛！因为您没有在一周以内完成电邮地址验证，您用${email}注册的账号已经被注销。如果您还想访问学修平台，请点击以下链接重新注册用户账户：\n\nhttps://amitabha.herokuapp.com/online/#/register \n\n新加坡智悲佛学会\nAMITABHA`;
 
           const sendEmailResult = await commonFunctions.sendEmail(
             email,
@@ -63,7 +63,7 @@ Parse.Cloud.job("removeInvalidLogin", async function(request, status) {
   logger.info("Job removeInvalidLogin finished at " + new Date());
 });
 
-const loadUserMissedReportingStates = async function(
+const loadUserMissedReportingStates = async function (
   parseUser,
   parseClass,
   lastSession,
@@ -116,7 +116,7 @@ const loadUserMissedReportingStates = async function(
   return results;
 };
 
-Parse.Cloud.job("remindClassReporting", async function(request, status) {
+Parse.Cloud.job("remindClassReporting", async function (request, status) {
   var date = new Date();
   //only remind between Tue & Sat (both inclusive)
   if (date.getDay() > 1) {

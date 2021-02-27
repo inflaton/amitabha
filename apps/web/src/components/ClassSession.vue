@@ -122,16 +122,6 @@
               v-on:click="editSession"
               >修改</b-button
             >
-            <b-button
-              variant="info"
-              v-on:click="session.showMoreDetails = !session.showMoreDetails"
-            >
-              <b-icon
-                v-if="session.showMoreDetails"
-                icon="chevron-double-up"
-              ></b-icon>
-              <b-icon v-else icon="chevron-double-down"></b-icon>
-            </b-button>
           </b-input-group-append>
         </b-input-group>
         <b-input-group
@@ -214,6 +204,16 @@
               v-on:click="updateAttendance(true)"
               >{{ attendanceButtonName(true) }}</b-button
             >
+            <b-button
+              variant="info"
+              v-on:click="session.showMoreDetails = !session.showMoreDetails"
+            >
+              <b-icon
+                v-if="session.showMoreDetails"
+                icon="chevron-double-up"
+              ></b-icon>
+              <b-icon v-else icon="chevron-double-down"></b-icon>
+            </b-button>
           </b-input-group-append>
         </b-input-group>
         <div v-if="session.showMoreDetails">
@@ -556,7 +556,7 @@ export default {
     },
     toPrestudyStateString(sessionDetails, index) {
       if (this.forApplication) {
-        return this.selfStudy ? "请自行安排时间学习" : "请在课前看完传承/法本";
+        return this.selfStudy ? "请自行安排时间学习" : "请在课前完成学习";
       }
       var chuanCheng = "未看传承";
       var faBen = "未看法本";
@@ -566,20 +566,13 @@ export default {
         if (typeof studyRecord.lineage == "number") {
           showStats = true;
           chuanCheng = `${studyRecord.lineage}人已看传承`;
-        } else if (studyRecord.lineage) {
-          if (this.selfStudy) {
-            return "已圆满";
-          }
-          chuanCheng = "已看传承";
-        }
-        if (typeof studyRecord.textbook == "number") {
           faBen = `${studyRecord.textbook}人已看法本`;
-        } else if (studyRecord.textbook) {
-          faBen = "已看法本";
+        } else if (studyRecord.lineage && studyRecord.textbook) {
+          return "已圆满";
         }
       }
 
-      return this.selfStudy && !showStats ? "未圆满" : `${chuanCheng}/${faBen}`;
+      return !showStats ? "未圆满" : `${chuanCheng}/${faBen}`;
     },
     needToShowPrestudyButton(index) {
       if (this.forApplication || this.forAdmin) {
@@ -785,7 +778,11 @@ export default {
       };
 
       var dt = new Date(session.scheduledAt);
-      dt.setHours(session.submodules[0].url.includes("rpsxl") ? 9 : 14); //TODO: allow setting time
+      if (session.submodules[0].url.includes("sdjkb")) {
+        dt.setHours(session.submodules[0].url.includes("rpsxl") ? 9 : 14); //TODO: allow setting time
+      } else {
+        dt.setHours(8); //TODO: allow setting time
+      }
       session.scheduledAt = dt;
       // console.log(`session.scheduledAt: ${session.scheduledAt}`);
       session.classId = this.classInfo.id;

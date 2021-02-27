@@ -96,7 +96,7 @@
                       v-model="user.isTeacher"
                     />
                     <label class="form-check-label" for="isTeacher"
-                      >&nbsp;辅导员</label
+                      >&nbsp;主持人</label
                     >
                   </div>
                   <div class="form-check">
