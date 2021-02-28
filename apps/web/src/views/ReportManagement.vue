@@ -18,6 +18,7 @@
               : `中组${classInfo.practiceName}统计`
           "
         />
+        <!--
         <br v-if="!classInfo.practiceId" />
         <DownloadReport
           v-if="!classInfo.practiceId"
@@ -31,6 +32,7 @@
           :selfStudy="true"
         />
         <hr />
+        -->
       </div>
       <div
         v-for="(classTeam, index) in classTeams"
@@ -46,6 +48,7 @@
                 : `${classTeam.name}${classInfo.practiceName}统计`
             "
           />
+          <!--
           <br v-if="!classInfo.practiceId" />
           <DownloadReport
             v-if="!classInfo.practiceId"
@@ -61,6 +64,7 @@
             :selfStudy="true"
           />
           <hr />
+          -->
         </div>
       </div>
     </div>

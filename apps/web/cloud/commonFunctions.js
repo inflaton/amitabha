@@ -17,7 +17,7 @@ const requireRole = (userWithRoles, role) => {
   }
 };
 
-const reportPracticeCountV2 = async function (
+const reportPracticeCountV2 = async function(
   user,
   practiceId,
   reportedAt,
@@ -149,7 +149,7 @@ const reportPracticeCountV2 = async function (
   };
 };
 
-const updateAttendanceV2 = async function (
+const updateAttendanceV2 = async function(
   user,
   classId,
   sessionId,
@@ -202,7 +202,7 @@ const updateAttendanceV2 = async function (
   return result;
 };
 
-const getDatesFromCsvHeader = function (csvHeader, isRxl, isPractice) {
+const getDatesFromCsvHeader = function(csvHeader, isRxl, isPractice) {
   var key,
     year,
     yearStr,
@@ -233,7 +233,7 @@ const getDatesFromCsvHeader = function (csvHeader, isRxl, isPractice) {
       const date = new Date(`${value} ${year}`);
       if (!isPractice) {
         // RXL starts at 9am SGT while DYM at 2pm SGT
-        date.setHours(isRxl ? 1 : 6);
+        date.setHours(isRxl == undefined ? 0 : isRxl ? 1 : 6);
       }
       mapDates[key] = date;
     }
@@ -241,7 +241,7 @@ const getDatesFromCsvHeader = function (csvHeader, isRxl, isPractice) {
   return mapDates;
 };
 
-const prepareStudyReportGeneration = async function (parseClass, formalStudy) {
+const prepareStudyReportGeneration = async function(parseClass, formalStudy) {
   var query = parseClass
     .relation(formalStudy ? "sessionsV2" : "selfStudySessions")
     .query();
@@ -283,7 +283,7 @@ const prepareStudyReportGeneration = async function (parseClass, formalStudy) {
   return { csvHeader, mapDates };
 };
 
-const prepareReportGeneration = async function (
+const prepareReportGeneration = async function(
   parseClass,
   isPractice,
   selfStudy,
@@ -293,31 +293,21 @@ const prepareReportGeneration = async function (
     return await prepareStudyReportGeneration(parseClass, formalStudy);
   }
 
-  const isRxl = parseClass.get("url").includes("rpsxl");
   const csvHeader = ["组别", "组员"];
+
+  const startDate = parseClass.get("startDate");
+  const classDay = startDate.getDay();
+  var saturday = startDate;
+  var sunday = new Date(startDate.getTime() + (7 - classDay) * DAY_IN_MS);
 
   var today = new Date();
   var endDate = new Date(today.getFullYear(), 11, 31);
 
-  //both RuXing & JiaXing classes started on 7 DEC 2019
-  var sunday = new Date("8 DEC 2019");
-
-  if (isPractice) {
-    if (isRxl) {
-      // RuXing practices started on 1/3/20
-      sunday = new Date("1 MAR 2020");
-    } else {
-      // JiaXing practices started on 30/6/19
-      sunday = new Date("30 JUN 2019");
-    }
-  }
-
   logger.info(
-    `prepareReportGeneration - sunday: ${sunday} endDate: ${endDate}`
+    `prepareReportGeneration - startDate: ${startDate}  sunday: ${sunday} endDate: ${endDate}`
   );
 
   var lastMonth, lastYear;
-  var saturday = new Date(sunday.getTime() - DAY_IN_MS);
   while (saturday <= endDate) {
     var monday = new Date(sunday.getTime() - 6 * DAY_IN_MS);
 
@@ -326,8 +316,9 @@ const prepareReportGeneration = async function (
     const satElements = toLocalDateString(saturday).split(re);
     const sunElements = toLocalDateString(sunday).split(re);
     const newCsvHeader = isPractice
-      ? `${monElements[1]}${monElements[0] != sunElements[0] ? monElements[0].toUpperCase() : ""
-      }-${sunElements[1]}${sunElements[0].toUpperCase()}`
+      ? `${monElements[1]}${
+          monElements[0] != sunElements[0] ? monElements[0].toUpperCase() : ""
+        }-${sunElements[1]}${sunElements[0].toUpperCase()}`
       : `${satElements[1]}-${satElements[0].toUpperCase()}`;
 
     if (!lastMonth) {
@@ -348,26 +339,26 @@ const prepareReportGeneration = async function (
     csvHeader.push(newCsvHeader);
 
     sunday = new Date(sunday.getTime() + 7 * DAY_IN_MS);
-    saturday = new Date(sunday.getTime() - DAY_IN_MS);
+    saturday = new Date(sunday.getTime() - (7 - classDay) * DAY_IN_MS);
   }
 
   csvHeader.push(`${lastMonth.toUpperCase()}${lastYear} TOTAL`);
   csvHeader.push(`${lastYear} TOTAL`);
   csvHeader.push("TOTAL");
 
-  var mapDates = getDatesFromCsvHeader(csvHeader, isRxl, isPractice);
+  var mapDates = getDatesFromCsvHeader(csvHeader, undefined, isPractice);
 
   return { csvHeader, mapDates };
 };
 
-const formatCount = function (count) {
+const formatCount = function(count) {
   if (count != undefined) {
     return count.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
   }
   return "";
 };
 
-const formatMinutes = function (minutes) {
+const formatMinutes = function(minutes) {
   if (minutes != undefined) {
     minutes = (minutes / 60).toFixed(2);
     return minutes.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
@@ -375,7 +366,7 @@ const formatMinutes = function (minutes) {
   return "";
 };
 
-const toLocalDateString = function (date) {
+const toLocalDateString = function(date) {
   const options = {
     year: "numeric",
     month: "short",
@@ -384,7 +375,7 @@ const toLocalDateString = function (date) {
   return date.toLocaleDateString("en-UK", options);
 };
 
-const sendEmailViaSendGrid = async function (toEmail, ccEmail, subject, body) {
+const sendEmailViaSendGrid = async function(toEmail, ccEmail, subject, body) {
   logger.info(`sending email to: ${toEmail} cc: ${ccEmail} using SendGrid`);
   const sgMail = require("@sendgrid/mail");
 
@@ -408,7 +399,7 @@ const sendEmailViaSendGrid = async function (toEmail, ccEmail, subject, body) {
   }
 };
 
-const sendEmailViaOutlook = async function (toEmail, ccEmail, subject, body) {
+const sendEmailViaOutlook = async function(toEmail, ccEmail, subject, body) {
   logger.info(`sending email to: ${toEmail} cc: ${ccEmail} using Outlook`);
 
   const mail = require("nodejs-nodemailer-outlook");
@@ -429,7 +420,7 @@ const sendEmailViaOutlook = async function (toEmail, ccEmail, subject, body) {
   return `sent email to ${toEmail}`;
 };
 
-const sendEmail = async function (toEmail, ccEmail, subject, body) {
+const sendEmail = async function(toEmail, ccEmail, subject, body) {
   toEmail = toEmail.toLowerCase();
   if (ccEmail) {
     ccEmail = ccEmail.toLowerCase();
@@ -440,7 +431,7 @@ const sendEmail = async function (toEmail, ccEmail, subject, body) {
   return await sendEmailViaSendGrid(toEmail, ccEmail, subject, body);
 };
 
-const getLastWeek = function (addGmt8Offset) {
+const getLastWeek = function(addGmt8Offset) {
   var curr = new Date();
   var sunday = curr.getDate() - curr.getDay(); // Sunday is the day of the month - the day of the week
   if (curr.getDay() == 0) {
@@ -464,7 +455,7 @@ const getLastWeek = function (addGmt8Offset) {
   return { monday, sunday };
 };
 
-const loadClassWithTeams = async function (classId) {
+const loadClassWithTeams = async function(classId) {
   var query = new Parse.Query("Class");
   query.equalTo("objectId", classId);
   const parseClass = await query.first();
@@ -502,7 +493,7 @@ const loadClassWithTeams = async function (classId) {
   return classInfo;
 };
 
-const loadStudentAttendanceV2 = async function (userId, classSession) {
+const loadStudentAttendanceV2 = async function(userId, classSession) {
   var result = {};
   if (classSession) {
     var query = new Parse.Query("UserSessionAttendance");
@@ -517,14 +508,15 @@ const loadStudentAttendanceV2 = async function (userId, classSession) {
   }
 
   logger.info(
-    `loadStudentAttendanceV2 - userId: ${userId} sessionId: ${classSession ? classSession._getId() : undefined
+    `loadStudentAttendanceV2 - userId: ${userId} sessionId: ${
+      classSession ? classSession._getId() : undefined
     } result: ${JSON.stringify(result)}`
   );
 
   return result;
 };
 
-const loadUserMissedReportingStates = async function (
+const loadUserMissedReportingStates = async function(
   parseUser,
   parseClass,
   lastSession,
@@ -572,7 +564,7 @@ const loadUserMissedReportingStates = async function (
   return results;
 };
 
-const remindClassReporting = async function (classId) {
+const remindClassReporting = async function(classId) {
   const lastWeek = getLastWeek(true);
   const lastWeekForEmail = getLastWeek(false);
   logger.info(
@@ -629,7 +621,7 @@ const remindClassReporting = async function (classId) {
   return { lastWeek, lastWeekForEmail, emailsSent };
 };
 
-const updateUserStudyRecord = async function (user, pathname, userStudyRecord) {
+const updateUserStudyRecord = async function(user, pathname, userStudyRecord) {
   requireAuth(user);
 
   const result = {};
