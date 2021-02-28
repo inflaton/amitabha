@@ -3,7 +3,7 @@
     <b-card class="text-center" :header="module.name">
       <b-card-text>
         <b-input-group prepend="总体进度：" class="mt-3">
-          <b-form-input readonly v-model="module.studyProgress"></b-form-input>
+          <b-form-input readonly :value="getStudyProgress()"></b-form-input>
           <b-input-group-append>
             <b-button
               variant="info"
@@ -70,8 +70,7 @@ export default {
       return {
         id: this.parseModule.id,
         name: this.parseModule.get("name"),
-        url: this.parseModule.get("url"),
-        studyProgress: this.getStudyProgress()
+        url: this.parseModule.get("url")
       };
     },
     getFullUrl(url) {

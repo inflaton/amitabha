@@ -60,6 +60,8 @@ export default {
       for (var i = 0; i < this.dashboard.modules.length; i++) {
         if (this.dashboard.modules[i].id == value.submodule.moduleId) {
           const module = this.dashboard.moduleDetails[i];
+          module.completedSubmodules += 1;
+          console.log(`${JSON.stringify(module)}`);
           module.submodules = value.result.userModuleInfo.submodules;
           break;
         }

@@ -45,6 +45,7 @@ export default {
   },
   methods: {
     onSubmoduleCompleted(value) {
+      this.userModuleInfo.completedSubmodules += 1;
       for (var i = 0; i < this.userModuleInfo.submodules.length; i++) {
         const submodule = this.userModuleInfo.submodules[i];
         if (submodule.id == value.submodule.id) {
