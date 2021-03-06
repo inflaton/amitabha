@@ -512,6 +512,7 @@ const loadSelfStudyInfo = async function (parseUser, forDashboard) {
 
   query = new Parse.Query("Module");
   query.ascending("index");
+  query.notEqualTo("forClassOnly", true);
   const modules = await query.find();
 
   if (moduleIds.length) {
