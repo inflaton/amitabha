@@ -61,11 +61,7 @@
             >
           </b-input-group-append>
         </b-input-group>
-        <b-input-group
-          v-if="session.submodules.length > 0"
-          prepend="上课名称："
-          class="mt-3"
-        >
+        <b-input-group prepend="上课名称：" class="mt-3">
           <b-form-input v-model="session.name"></b-form-input>
         </b-input-group>
       </div>
