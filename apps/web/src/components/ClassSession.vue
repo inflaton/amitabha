@@ -120,30 +120,7 @@
             >
           </b-input-group-append>
         </b-input-group>
-        <b-input-group
-          v-if="sessionDetails.submodules.length == 1"
-          prepend="课前学习："
-          class="mt-3"
-        >
-          <b-form-input readonly v-model="session.prestudyState"></b-form-input>
-          <b-input-group-append>
-            <b-button
-              variant="success"
-              v-if="needToShowPrestudyButton(0)"
-              v-on:click="updatePrestudyState(0)"
-              >圆满</b-button
-            >
-            <b-button
-              variant="info"
-              :href="getFullUrl(sessionDetails.submodules[0].url)"
-              target="_blank"
-            >
-              <b-icon icon="book"></b-icon>
-            </b-button>
-          </b-input-group-append>
-        </b-input-group>
         <div
-          v-else
           v-for="(submodule, index) in sessionDetails.submodules"
           :key="submodule.id + index"
         >
